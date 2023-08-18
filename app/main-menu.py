@@ -1,3 +1,4 @@
+import os
 import re
 import sys
 
@@ -5,9 +6,9 @@ import support
 
 # Needed before I can access my external imports from common.py below...
 support.add_to_path()
-import common
-
 import api_data
+import common
+import send_invites
 
 
 def determine_module(choice):
@@ -15,7 +16,8 @@ def determine_module(choice):
         common.screen_clear()
         module = api_data.connect_api(interval=10)
     elif choice == 2:
-        return  # Todo
+        common.screen_clear()
+        module = send_invites.initiate_driver(url="linkedin.com", interval=5)
     else:
         return  # Exit prog - chose 3
     return module
@@ -28,8 +30,8 @@ reg_patterns = {
 common.compile_patterns(reg_patterns)
 welcome_str = "LinkedIn Auto-Pilot"
 opts_lst = [
-    "Shortlist jobs from the past 24 hours",
-    "Post a status update",
+    f"Shortlist jobs with {os.getenv('USER').capitalize()}'s keywords",
+    "Search/send invites to 2nd connections",
     "Quit",
 ]
 main_menu_dict = common.make_menu(opts_lst[0], opts_lst[1], opts_lst[2])
@@ -42,11 +44,11 @@ while not valid_input:
         keep_running = determine_module(int(choice))
         if keep_running is None:
             common.screen_clear()
-            print("Thankyou. Good bye!")
+            common.print_green("Thankyou. Good bye!")
             sys.exit(0)
     else:
         common.screen_clear()
-        print(
+        common.print_red(
             "Invalid input\nPlease enter a number correspoding to one of the \
 given options."
         )

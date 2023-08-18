@@ -9,19 +9,16 @@ from linkedin_api import Linkedin
 
 
 def connect_api(interval=None, **data):
-    if data:  # We need to resolve some imports if module is run directly from cmd line,
-        # instead of 'main_menu'
-
+    # We need to resolve some imports if module is run directly
+    # from cmd line, instead of 'main_menu'
+    if data:
         for value in data.values():
             f"import {value}"
             print(f"Imported {value}.py")
     print("Please wait while we scrape data from LinkedIn...\n\n")
     api = Linkedin(os.getenv("username"), os.getenv("password"))
 
-    # Found new job: {'dashEntityUrn': 'urn:li:fsd_jobPosting:3692925088', 'companyDetails': {'company': 'urn:li:fs_normalized_company:2480157', '*companyResolutionResult': 'urn:li:fs_normalized_company:2480157', '$recipeTypes': ['com.linkedin.voyager.deco.jserp.WebJobPostingWithCompanyName'], '$type': 'com.linkedin.voyager.jobs.JobPostingCompany'}, 'formattedLocation': 'Denver, CO', 'listedAt': 1692244605000, 'title': 'Platform Engineer', '$recipeTypes': ['com.linkedin.voyager.deco.jserp.WebSearchJobJserpJobPostingLite'], '$type': 'com.linkedin.voyager.jobs.JobPosting', 'entityUrn': 'urn:li:fs_normalized_jobPosting:3692925088', 'workRemoteAllowed': True}
     try:
-        # my_data = api.get_user_profile(use_cache=True)
-        # print(f"Kyle's URN -> {my_data['miniProfile']['dashEntityUrn']}")
         job_lst = api.search_jobs(
             keywords="software developer",
             experience=["2", "3"],
