@@ -24,7 +24,7 @@ def initiate_driver(url=None, interval=None):
         service=FirefoxService(GeckoDriverManager().install(), log_path="/dev/null")
     )
     # log_path arg prevents 'gecko.log' in project dir. I don't need it
-    navigate_social_media(driver, url, slp_timeout)
+    navigate_social_media(driver, url, slp_timeout, xpaths=xpath_dict, people=people_dict)
     driver.quit()
     return True
 
@@ -38,9 +38,9 @@ def check_for_captcha(driver):
         return None
 
 
-def navigate_social_media(driver, url, interval=None):
-    creds = dict(islice(xpath_dict.items(), None, 3, None))
-    cmds = dict(islice(xpath_dict.items(), 3, len(xpath_dict), None))
+def navigate_social_media(driver, url, interval=None, **data):
+    creds = dict(islice(data["xpaths"].items(), None, 3, None))
+    cmds = dict(islice(data["xpaths"].items(), 3, len(xpath_dict), None))
     # returns iterator in their default ordering - uses start, stop, step
     driver.set_window_position(2000, 0)  # When using single monitor, remove this
     # Set window mid built-in screen (right). Leave big monitor open for output/code
@@ -76,14 +76,14 @@ def navigate_social_media(driver, url, interval=None):
                 clickable = WebDriverWait(driver, web_wait_timeout).until(
                     EC.element_to_be_clickable((By.XPATH, f"{cmds[key]}"))
                 )
-                clickable.send_keys(people_dict["brother"].get("name"))
+                clickable.send_keys(data["people"]["brother"].get("name"))
                 driver.switch_to.default_content
                 sleep(5)
             elif key == "write_msg_box":
                 clickable = WebDriverWait(driver, web_wait_timeout).until(
                     EC.element_to_be_clickable((By.XPATH, f"{cmds[key]}"))
                 )
-                clickable.send_keys(people_dict["brother"].get("message"))
+                clickable.send_keys(data["people"]["brother"].get("message"))
             else:
                 clickable = WebDriverWait(driver, web_wait_timeout).until(
                     EC.element_to_be_clickable((By.XPATH, f"{cmds[key]}"))
