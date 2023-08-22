@@ -2,22 +2,28 @@ import os
 import re
 import sys
 
-import support
+from support import add_to_path
 
 # Needed before I can access my external imports from common.py below...
-support.add_to_path()
-import api_data
-import common
-import send_invites
+add_to_path()
+from common import (
+    compile_patterns,
+    format_main_menu,
+    make_menu,
+    print_green,
+    print_red,
+    screen_clear,
+)
+from send_invites import initiate_driver
 
 
 def determine_module(choice):
     if choice == 1:
-        common.screen_clear()
-        module = api_data.connect_api(interval=10)
-    elif choice == 2:
-        common.screen_clear()
-        module = send_invites.initiate_driver(url="linkedin.com", interval=5)
+        screen_clear()
+        module = initiate_driver(url="linkedin.com", interval=5)
+    elif choice == 2:  # Todo
+        screen_clear()
+        raise NotImplementedError
     else:
         return  # Exit prog - chose 3
     return module
@@ -27,29 +33,29 @@ reg_patterns = {
     "menu_sel_pattern": "^[1-3]{1}$",
 }
 
-common.compile_patterns(reg_patterns)
+compile_patterns(reg_patterns)
 welcome_str = "LinkedIn Auto-Pilot"
 opts_lst = [
-    f"Shortlist jobs with {os.getenv('USER').capitalize()}'s keywords",
     "Search/send invites to 2nd connections",
+    f"{os.getenv('USER').capitalize()} will implement future functionality",
     "Quit",
 ]
-main_menu_dict = common.make_menu(opts_lst[0], opts_lst[1], opts_lst[2])
+main_menu_dict = make_menu(opts_lst[0], opts_lst[1], opts_lst[2])
 valid_input = False
 while not valid_input:
-    common.screen_clear()
-    common.format_main_menu(welcome_str, main_menu_dict)
+    screen_clear()
+    format_main_menu(welcome_str, main_menu_dict)
     choice = input("=> ").strip()
     if re.fullmatch(reg_patterns.get("menu_sel_pattern", "Non Existent"), choice):
         keep_running = determine_module(int(choice))
         if keep_running is None:
-            common.screen_clear()
-            common.print_green("Thankyou. Good bye!")
+            screen_clear()
+            print_green("Thankyou. Good bye!")
             sys.exit(0)
     else:
-        common.screen_clear()
-        common.print_red(
+        screen_clear()
+        print_red(
             "Invalid input\nPlease enter a number correspoding to one of the \
 given options."
         )
-        common.screen_clear(2)
+        screen_clear(2)

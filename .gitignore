@@ -158,6 +158,7 @@ cython_debug/
 pyrightconfig*
 # Gecko drivers for Selenium Firefox navigation
 **/.wdm
+app/*.txt
 
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can

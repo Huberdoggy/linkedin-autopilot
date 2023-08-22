@@ -1,5 +1,4 @@
 attrs==23.1.0
-beautifulsoup4==4.12.2
 black==23.3.0
 certifi==2023.7.22
 charset-normalizer==3.2.0
@@ -8,13 +7,12 @@ exceptiongroup==1.1.3
 flake8==6.0.0
 h11==0.14.0
 idna==3.4
-linkedin-api @ git+https://github.com/tomquirk/linkedin-api.git@5273fdfd4845b3eab588c08063a96f4910b560f5
-lxml==4.9.3
 mccabe==0.7.0
 mypy-extensions==1.0.0
 outcome==1.2.0
 packaging==23.1
 pathspec==0.11.1
+pip-autoremove==0.10.0
 platformdirs==3.6.0
 pycodestyle==2.10.0
 pyfiglet==0.8.post1
@@ -25,7 +23,6 @@ requests==2.31.0
 selenium==4.11.2
 sniffio==1.3.0
 sortedcontainers==2.4.0
-soupsieve==2.4.1
 termcolor==2.3.0
 trio==0.22.2
 trio-websocket==0.10.3

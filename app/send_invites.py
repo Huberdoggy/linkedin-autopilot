@@ -42,13 +42,14 @@ def navigate_social_media(driver, url, interval=None):
     creds = dict(islice(xpath_dict.items(), None, 3, None))
     cmds = dict(islice(xpath_dict.items(), 3, len(xpath_dict), None))
     # returns iterator in their default ordering - uses start, stop, step
+    driver.set_window_position(2000, 0)  # When using single monitor, remove this
+    # Set window mid built-in screen (right). Leave big monitor open for output/code
     driver.maximize_window()
     driver.delete_all_cookies()
     driver.set_page_load_timeout(
         (interval + 20) if interval is not None else 25
     )  # defaults to 5, passed from main_menu
     web_wait_timeout = 10
-    # driver.implicitly_wait((interval + 5) if interval is not None else 10)
     driver.get(f"https://www.{url}")
     driver.refresh()  # In the event it hangs
 
@@ -94,7 +95,3 @@ def navigate_social_media(driver, url, interval=None):
         sleep(5)
     finally:
         return driver
-
-
-# if __name__ == "__main__":
-#     initiate_driver()
