@@ -59,8 +59,8 @@ def navigate_social_media(driver, url, interval=None, **data):
     cmds = dict(islice(data["xpaths"].items(), 3, len(xpath_dict), None))
     # returns iterator in their default ordering - uses start, stop, step
     x_coord = 2000 if get_os_monitors() > 1 else 0
-    print(f"X coordinate is: {x_coord}")
-    driver.set_window_position(x_coord, 0)  # When using single monitor, remove this
+    # print(f"X coordinate is: {x_coord}")
+    driver.set_window_position(x_coord, 0)
     # Set window mid built-in screen (right). Leave big monitor open for output/code
     driver.maximize_window()
     driver.delete_all_cookies()
