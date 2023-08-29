@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 # import sys
 from itertools import islice
@@ -29,6 +30,21 @@ def initiate_driver(url=None, interval=None):
     return True
 
 
+def get_os_monitors():
+    cmd = r"xrandr --listactivemonitors | grep -Eoi '\bmonitors:\s[1-2]{1}\b' | awk -F: '{print $2}'"
+
+    xrandr_ps = subprocess.Popen(
+        cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+    )
+
+    try:
+        output = xrandr_ps.communicate()[0].decode("utf-8").strip()
+        output = int(output)
+        return output
+    except Exception as e:
+        print(e)
+
+
 def check_for_captcha(driver):
     xpath = '//h1[text()="Let\'s do a quick security check"]'
     try:
@@ -42,7 +58,9 @@ def navigate_social_media(driver, url, interval=None, **data):
     creds = dict(islice(data["xpaths"].items(), None, 3, None))
     cmds = dict(islice(data["xpaths"].items(), 3, len(xpath_dict), None))
     # returns iterator in their default ordering - uses start, stop, step
-    driver.set_window_position(2000, 0)  # When using single monitor, remove this
+    x_coord = 2000 if get_os_monitors() > 1 else 0
+    print(f"X coordinate is: {x_coord}")
+    driver.set_window_position(x_coord, 0)  # When using single monitor, remove this
     # Set window mid built-in screen (right). Leave big monitor open for output/code
     driver.maximize_window()
     driver.delete_all_cookies()
@@ -78,7 +96,7 @@ def navigate_social_media(driver, url, interval=None, **data):
                 )
                 clickable.send_keys(data["people"]["brother"].get("name"))
                 driver.switch_to.default_content
-                sleep(5)
+                sleep(interval if interval is not None else 5)
             elif key == "write_msg_box":
                 clickable = WebDriverWait(driver, web_wait_timeout).until(
                     EC.element_to_be_clickable((By.XPATH, f"{cmds[key]}"))
@@ -89,9 +107,9 @@ def navigate_social_media(driver, url, interval=None, **data):
                     EC.element_to_be_clickable((By.XPATH, f"{cmds[key]}"))
                 )
                 clickable.click()
-        sleep(interval) if interval is not None else 5
+        sleep(interval if interval is not None else 5)
     except selenium.common.exceptions.NoSuchElementException as e:
         print(f"Error caught:\n\n{e.msg}")
-        sleep(5)
+        sleep(interval if interval is not None else 5)
     finally:
         return driver
